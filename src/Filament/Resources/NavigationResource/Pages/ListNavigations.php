@@ -16,7 +16,7 @@ class ListNavigations extends ListRecords
     protected function getActions(): array
     {
         return [
-            CreateAction::make('create'),
+            //
         ];
     }
 }

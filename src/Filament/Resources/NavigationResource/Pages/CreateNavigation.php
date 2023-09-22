@@ -14,4 +14,5 @@ class CreateNavigation extends CreateRecord
     {
         return FilamentNavigation::get()->getResource();
     }
+
 }

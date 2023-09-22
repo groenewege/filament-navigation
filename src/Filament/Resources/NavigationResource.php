@@ -32,6 +32,8 @@ class NavigationResource extends Resource
 
     private static ?string $workLabel = null;
 
+    protected static ?string $recordTitleAttribute = 'name';
+
     public static function disableTimestamps(bool $condition = true): void
     {
         static::$showTimestamps = ! $condition;
@@ -42,51 +44,14 @@ class NavigationResource extends Resource
         return $form
             ->schema([
                 Section::make('')->schema([
-                    TextInput::make('name')
-                        ->label(__('filament-navigation::filament-navigation.attributes.name'))
-                        ->reactive()
-                        ->debounce()
-                        ->afterStateUpdated(function (?string $state, Set $set) {
-                            if (! $state) {
-                                return;
-                            }
 
-                            $set('handle', Str::slug($state));
-                        })
-                        ->required(),
                     ViewField::make('items')
                         ->label(__('filament-navigation::filament-navigation.attributes.items'))
                         ->default([])
                         ->view('filament-navigation::navigation-builder'),
                 ])
-                    ->columnSpan([
-                        12,
-                        'lg' => 8,
-                    ]),
-                Group::make([
-                    Section::make('')->schema([
-                        TextInput::make('handle')
-                            ->label(__('filament-navigation::filament-navigation.attributes.handle'))
-                            ->required()
-                            ->unique(column: 'handle', ignoreRecord: true),
-                        View::make('filament-navigation::card-divider')
-                            ->visible(static::$showTimestamps),
-                        Placeholder::make('created_at')
-                            ->label(__('filament-navigation::filament-navigation.attributes.created_at'))
-                            ->visible(static::$showTimestamps)
-                            ->content(fn (?Navigation $record) => $record ? $record->created_at->translatedFormat(Table::$defaultDateTimeDisplayFormat) : new HtmlString('&mdash;')),
-                        Placeholder::make('updated_at')
-                            ->label(__('filament-navigation::filament-navigation.attributes.updated_at'))
-                            ->visible(static::$showTimestamps)
-                            ->content(fn (?Navigation $record) => $record ? $record->updated_at->translatedFormat(Table::$defaultDateTimeDisplayFormat) : new HtmlString('&mdash;')),
-                    ]),
-                ])
-                    ->columnSpan([
-                        12,
-                        'lg' => 4,
-                    ]),
             ])
-            ->columns(12);
+            ->columns(1);
     }
 
     public static function navigationLabel(?string $string): void
@@ -125,35 +90,20 @@ class NavigationResource extends Resource
             ->columns([
                 TextColumn::make('name')
                     ->label(__('filament-navigation::filament-navigation.attributes.name'))
-                    ->searchable(),
-                TextColumn::make('handle')
-                    ->label(__('filament-navigation::filament-navigation.attributes.handle'))
-                    ->searchable(),
-                TextColumn::make('created_at')
-                    ->label(__('filament-navigation::filament-navigation.attributes.created_at'))
-                    ->dateTime()
-                    ->sortable(),
-                TextColumn::make('updated_at')
-                    ->label(__('filament-navigation::filament-navigation.attributes.updated_at'))
-                    ->dateTime()
-                    ->sortable(),
             ])
             ->actions([
-                EditAction::make()
-                    ->icon(null),
-                DeleteAction::make()
-                    ->icon(null),
+                EditAction::make(),
             ])
             ->filters([
 
-            ]);
+            ])
+            ->paginated(false);
     }
 
     public static function getPages(): array
     {
         return [
             'index' => NavigationResource\Pages\ListNavigations::route('/'),
-            'create' => NavigationResource\Pages\CreateNavigation::route('/create'),
             'edit' => NavigationResource\Pages\EditNavigation::route('/{record}'),
         ];
     }

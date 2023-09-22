@@ -2,6 +2,11 @@
 
 All notable changes to `filament-navigation` will be documented in this file.
 
+## local changes
+
+- implement tenancy
+- simplify resource
+
 ## v1.0.0-beta4 - 2023-09-01
 
 ### What's Changed

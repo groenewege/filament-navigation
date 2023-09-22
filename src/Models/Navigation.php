@@ -2,8 +2,10 @@
 
 namespace RyanChandler\FilamentNavigation\Models;
 
+use App\Models\Tenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property string $handle
@@ -24,5 +26,10 @@ class Navigation extends Model
     public static function fromHandle(string $handle): ?static
     {
         return static::query()->firstWhere('handle', $handle);
+    }
+
+    public function tenant(): BelongsTo
+    {
+        return $this->belongsTo(Tenant::class);
     }
 }
